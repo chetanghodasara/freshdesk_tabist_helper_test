@@ -9,14 +9,30 @@ async function init() {
 }
 
 async function renderText() {
-    const contactData = await client.data.get('ticket');
-    const textElement = document.getElementById('sourcetext');
-    textElement.innerHTML = `<pre><code>${JSON.stringify(contactData, null, 2)}</code></pre>`;
-//    const {
-//        contact: { name }
-//    } = contactData;
-//    console.log('----- Contact Name:', name);
-//    console.log('----- Contact Data:', contactData);
+    const contactData = await client.data.get('conversation');
+
+//    // print data
+//    const sourcetextElement = document.getElementById('sourcetext');
+//    sourcetextElement.innerHTML = `<pre><code>${JSON.stringify(contactData, null, 2)}</code></pre>`;
+
+    // show them like a chat
+    let messages = contactData.conversation.messages;
+    messages.sort((a, b) => new Date(a.created_time) - new Date(b.created_time));
+
+    const textElement = document.getElementById('chattext');
+    textElement.innerHTML = '';
+
+    messages.forEach(message => {
+        const sender = message.actor_type
+        const senderType = message.actor_type === 'Agent' ? 'right' : 'left';
+        const messageContent = message.message_parts.map(part => part.text.content).join('\n');
+
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', senderType);
+        messageElement.innerHTML = `<small>${sender}</small><pre><code>${messageContent}</code></pre>`;
+
+        textElement.appendChild(messageElement);
+    });
 }
 
 async function getSuggestion() {
@@ -38,20 +54,20 @@ async function getSuggestion() {
 }
 
 function copyToClipboard() {
-//    const textElement = document.getElementById('apptext');
-//    const textToCopy = textElement.innerText;
+    //    const textElement = document.getElementById('apptext');
+    //    const textToCopy = textElement.innerText;
     const copyButton = document.getElementById('copyButton');
     copyButton.textContent = 'Copied...';
     setTimeout(() => {
         copyButton.textContent = 'Copy';
     }, 2000);
 
-//    alert("Text Copied: " + textToCopy);
-//    navigator.clipboard.writeText(textToCopy).then(() => {
-//        console.log('Copied to clipboard');
-//    }).catch(err => {
-//        console.error('Error copying to clipboard:', err);
-//    });
+    //    alert("Text Copied: " + textToCopy);
+    //    navigator.clipboard.writeText(textToCopy).then(() => {
+    //        console.log('Copied to clipboard');
+    //    }).catch(err => {
+    //        console.error('Error copying to clipboard:', err);
+    //    });
 }
 
 init();

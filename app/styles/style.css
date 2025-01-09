@@ -49,3 +49,23 @@ html {
   padding: 10px;  /*Optional: Add padding for better readability*/
   box-sizing: border-box; /* Include padding in the element's total width and height */
 }
+
+.message {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.message.left {
+  background-color: #e0f7fa;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.message.right {
+  background-color: #ffebee;
+  text-align: right;
+  margin-right: 10px;
+}
